@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Library Management System</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f5f5f7;--sf:#fff;--tx:#1d1d1f;--mu:#6e6e73;--bd:#e8e8ed;--pr:#0071e3;--pr2:#2997ff;--ok:#059669;--wn:#d97706;--er:#dc2626;--sh:0 2px 12px rgba(0,0,0,.06);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--sf:#1c1c1e;--tx:#f5f5f7;--mu:#98989d;--bd:#38383a;--sh:0 2px 12px rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#000;--sf:#1c1c1e;--tx:#f5f5f7;--mu:#98989d;--bd:#38383a;--sh:0 2px 12px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,"Helvetica Neue",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;letter-spacing:-.022em}h2{font-size:30px;font-weight:700}h3{font-weight:600}button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:980px;padding:8px 18px;cursor:pointer;font-weight:500;transition:.2s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn.s{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}.btn.d{background:var(--er)}.btn.g{background:var(--ok)}.btn.sm{padding:4px 10px;font-size:13px}
+input,select,textarea{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;margin:4px 0 10px}
+label{font-size:13px;color:var(--mu);font-weight:600}
+.auth{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.hero{background:radial-gradient(circle at 20% 10%,#1d3a63,#000 70%);color:#f5f5f7;padding:56px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.hero h1{font-size:46px;line-height:1.08;font-weight:700}.hero p{opacity:.85}
+.form{display:flex;align-items:center;justify-content:center;padding:24px}.form>div{width:100%;max-width:380px}
+.demo{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.app{display:flex;min-height:100vh}
+.side{width:240px;background:var(--sf);border-right:1px solid var(--bd);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto;flex-shrink:0;transition:.25s}
+.logo{font-weight:800;font-size:18px;padding:4px 10px 18px;display:flex;gap:8px;align-items:center}
+.nav{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--mu);font-weight:500;transition:.2s}
+.nav:hover{background:var(--bg);color:var(--tx)}.nav.on{background:color-mix(in srgb,var(--pr) 12%,transparent);color:var(--pr);font-weight:600}
+.main{flex:1;min-width:0}
+.top{display:flex;align-items:center;gap:12px;padding:12px 24px;background:color-mix(in srgb,var(--sf) 72%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.top .sp{flex:1}.menu{display:none}
+.pg{padding:24px;animation:in .35s}@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--sf);border:1px solid color-mix(in srgb,var(--bd) 60%,transparent);border-radius:22px;padding:22px;box-shadow:var(--sh)}
+.stat b{display:block;font-size:28px}.stat span{color:var(--mu);font-size:13px}
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}
+.bk{cursor:pointer;transition:.25s}.bk:hover{transform:translateY(-6px)}
+.cv{position:relative;overflow:hidden;aspect-ratio:2/3;border-radius:10px 14px 14px 10px;padding:14px 12px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--sh),inset 6px 0 8px rgba(0,0,0,.18);font-weight:700;font-size:14px;line-height:1.25}
+.cv small{font-weight:500;opacity:.85}.cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#fff}.bk:hover .cv{box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.bk h4{margin:8px 0 0;font-size:14px}.bk p{margin:0;color:var(--mu);font-size:12px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.t-ok{background:#d1fae5;color:#047857}.t-wn{background:#fef3c7;color:#b45309}.t-er{background:#fee2e2;color:#b91c1c}.t-in{background:#e0e7ff;color:#4338ca}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--bd);font-size:14px;white-space:nowrap}th{color:var(--mu);font-size:12px;text-transform:uppercase}
+tr:hover td{background:var(--bg)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:160px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--mu);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.bars i{display:block;background:linear-gradient(var(--pr2),var(--pr));border-radius:6px 6px 0 0;transition:height .6s;min-height:3px}
+.hb{margin:8px 0}.hb i{display:block;height:8px;border-radius:9px;background:var(--pr)}.hb div{background:var(--bd);border-radius:9px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row>.btn{flex:none}
+.mod{position:fixed;inset:0;background:rgba(10,14,28,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.mod>.card{max-width:640px;width:100%;max-height:90vh;overflow:auto;animation:in .25s}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:30;box-shadow:var(--sh)}
+.det{display:grid;grid-template-columns:150px 1fr;gap:18px}
+.star{cursor:pointer;color:#f59e0b;font-size:20px}
+@media(max-width:800px){.auth{grid-template-columns:1fr}.hero{padding:28px}.side{position:fixed;z-index:15;left:-260px;height:100%}.side.open{left:0}.menu{display:block}.det{grid-template-columns:1fr}.pg{padding:14px}}
+</style></head><body><div id="root"></div>
+<script>
+const $=s=>document.querySelector(s),D=864e5,now=()=>Date.now();
+const fd=t=>new Date(t).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+const COL=['#0071e3','#30b0c7','#ff2d55','#ff9f0a','#34c759','#af52de','#5856d6','#ff6482'];
+let S,me=null,view='',q='',cat='',toastT;
+function seed(){const B=[['Introduction to Algorithms','T. Cormen','Computer Science','9780262046305',4,4.8,1],['Clean Code','R. C. Martin','Computer Science','9780132350884',3,4.6,1],['Operating System Concepts','A. Silberschatz','Computer Science','9781119800361',3,4.4,1],['Database System Concepts','Korth','Computer Science','9780078022159',2,4.3,0],['The Alchemist','Paulo Coelho','Fiction','9780062315007',3,4.5,0],['1984','George Orwell','Fiction','9780451524935',2,4.7,1],['A Brief History of Time','S. Hawking','Science','9780553380163',2,4.6,0],['Sapiens','Y. N. Harari','History','9780062316110',3,4.7,0],['Zero to One','Peter Thiel','Business','9780804139298',2,4.2,0],['Computer Networks','A. Tanenbaum','Computer Science','9780132126953',3,4.1,1]];
+const B2=[['Rich Dad Poor Dad','Robert T. Kiyosaki','Finance','9781612680194',4,4.5,0],['Napoleon: A Life','Andrew Roberts','Biography & History','9780143127857',3,4.7,1],['A Brief History of Time','Stephen Hawking','Physics','9780553380163',3,4.6,1],['Cosmos','Carl Sagan','Science','9780345539434',3,4.8,1],["Surely You're Joking, Mr. Feynman!",'Richard P. Feynman','Physics','9780393316049',2,4.7,0],['Astrophysics for People in a Hurry','Neil deGrasse Tyson','Physics','9780393609394',3,4.5,0],['Fermat’s Enigma','Simon Singh','Mathematics','9780385493628',2,4.6,0],['Gödel, Escher, Bach','Douglas Hofstadter','Mathematics','9780465026562',2,4.5,0],['The Joy of x','Steven Strogatz','Mathematics','9780544105850',2,4.4,0],['The Selfish Gene','Richard Dawkins','Science','9780198788607',2,4.4,0],['Introduction to Algorithms','T. Cormen et al.','Computer Science','9780262046305',4,4.8,1],['Clean Code','Robert C. Martin','Computer Science','9780132350884',3,4.6,1],['Sapiens','Yuval Noah Harari','Biography & History','9780062316110',3,4.7,0],['The Psychology of Money','Morgan Housel','Finance','9780857197689',3,4.7,0],['Atomic Habits','James Clear','Self-Help','9780735211292',3,4.8,0],['Thinking, Fast and Slow','Daniel Kahneman','Science','9780374533557',2,4.5,0]];const books=B2.map((b,i)=>({id:i+1,title:b[0],author:b[1],cat:b[2],isbn:b[3],copies:b[4],avail:b[4],rating:b[5],digital:b[6],col:COL[i%8]}));
+const users=[{id:1,name:'Admin',email:'admin@lib.edu',pw:'admin123',role:'admin'},{id:2,name:'Priya Librarian',email:'lib@lib.edu',pw:'lib123',role:'librarian'},{id:3,name:'Arjun Student',email:'stu@lib.edu',pw:'stu123',role:'student'},{id:4,name:'Sneha Reddy',email:'sneha@lib.edu',pw:'stu123',role:'student'},{id:5,name:'Rahul Verma',email:'rahul@lib.edu',pw:'stu123',role:'student'}];
+const loans=[];let lid=1;[[3,1,5,0],[3,5,20,0],[4,2,18,0],[5,3,3,0],[3,6,10,1],[4,8,40,1],[5,1,35,1]].forEach(l=>{const o=now()-l[2]*D;loans.push({id:lid++,uid:l[0],bid:l[1],out:o,due:o+14*D,ret:l[3]?o+8*D:null});if(!l[3])books[l[1]-1].avail--});
+return{books,users,loans,res:[],wish:[],rev:[{bid:1,uid:4,r:5,t:'A must-read for every CSE student.'}],notes:[],cats:['Computer Science','Science','Physics','Mathematics','Biography & History','Finance','Self-Help'],set:{rate:5,days:14,max:3},nid:6,bid:17,lid}}
+function load(){try{S=JSON.parse(localStorage.getItem('lms4'))}catch(e){}if(!S)S=seed()}
+function save(){try{localStorage.setItem('lms4',JSON.stringify(S))}catch(e){}}
+const book=id=>S.books.find(b=>b.id==id),user=id=>S.users.find(u=>u.id==id);
+const fine=l=>{const e=l.ret||now();return Math.max(0,Math.floor((e-l.due)/D))*S.set.rate};
+const od=l=>!l.ret&&now()>l.due;
+const status=b=>b.avail>0?'<span class="tag t-ok">Available</span>':S.res.some(r=>r.bid==b.id&&r.st=='waiting')?'<span class="tag t-wn">Reserved</span>':'<span class="tag t-er">Borrowed</span>';
+function toast(m){clearTimeout(toastT);let t=$('.toast');if(t)t.remove();document.body.insertAdjacentHTML('beforeend',`<div class="toast">${m}</div>`);toastT=setTimeout(()=>$('.toast')?.remove(),2600)}
+function notify(uid,t){S.notes.unshift({uid,t,d:now()})}
+const cover=b=>`<div class="cv" style="background:linear-gradient(145deg,${b.col},#111827cc)"><span>${b.title}</span><small>${b.author}</small><img src="https://covers.openlibrary.org/b/isbn/${b.isbn}-L.jpg?default=false" alt="${b.title.replace(/"/g,'')} cover" loading="lazy" onerror="this.remove()"></div>`;
+const stars=r=>'★'.repeat(Math.round(r))+'☆'.repeat(5-Math.round(r));
+
+/* ---------- AUTH ---------- */
+function authView(mode='login'){const L=mode=='login';$('#root').innerHTML=`<div class="auth"><div class="hero"><div style="font-size:42px">📚</div><h1>Smart Library<br>Management System</h1><p>Borrow, reserve, track and analyse — one platform for students, librarians and administrators.</p><p>✓ QR book issuing &nbsp; ✓ Smart recommendations<br>✓ Auto fine calculation &nbsp; ✓ Digital library</p></div>
+<div class="form"><div class="card"><h2>${L?'Welcome back':'Create student account'}</h2><p style="color:var(--mu)">${L?'Sign in to your dashboard':'Register to start borrowing'}</p>
+${L?'':'<label>Full name</label><input id="n">'}<label>Email</label><input id="e" type="email"><label>Password</label><input id="p" type="password">
+<button class="btn" style="width:100%" onclick="${L?'login()':'register()'}">${L?'Sign in':'Register'}</button>
+<p style="text-align:center"><a href="#" onclick="authView('${L?'reg':'login'}');return false" style="color:var(--pr)">${L?'New student? Register':'Have an account? Sign in'}</a></p>
+${L?`<label>Demo accounts</label><div class="demo"><button class="btn s sm" onclick="demo('stu@lib.edu','stu123')">Student</button><button class="btn s sm" onclick="demo('lib@lib.edu','lib123')">Librarian</button><button class="btn s sm" onclick="demo('admin@lib.edu','admin123')">Admin</button></div>`:''}</div></div></div>`}
+function demo(e,p){$('#e').value=e;$('#p').value=p;login()}
+function login(){const u=S.users.find(u=>u.email==$('#e').value.trim()&&u.pw==$('#p').value);if(!u)return toast('Invalid email or password');me=u;view=NAV[u.role][0][0];render()}
+function register(){const n=$('#n').value.trim(),e=$('#e').value.trim(),p=$('#p').value;if(!n||!e||p.length<4)return toast('Fill all fields (password 4+ chars)');if(S.users.some(u=>u.email==e))return toast('Email already registered');const u={id:Date.now(),name:n,email:e,pw:p,role:'student'};S.users.push(u);save();me=u;view='browse';render()}
+function logout(){me=null;authView()}
+
+/* ---------- NAV ---------- */
+const NAV={student:[['browse','🔍','Browse'],['loans','📖','My Loans'],['wish','♡','Wishlist'],['digital','💻','Digital Library'],['notes','🔔','Notifications']],
+librarian:[['lover','📊','Overview'],['lbooks','📚','Books'],['cats','🏷️','Categories'],['studs','🎓','Students'],['issue','📲','Issue / Return'],['overdue','⏰','Overdue'],['resv','📌','Reservations'],['reports','📄','Reports']],
+admin:[['aover','📊','Analytics'],['accts','👥','Accounts & Roles'],['lover','📚','Library Status'],['overdue','⏰','Overdue'],['reports','📄','Reports'],['settings','⚙️','Fine Rules']]};
+function render(){const nn=me.role=='student'?S.notes.filter(n=>n.uid==me.id).length:0;
+$('#root').innerHTML=`<div class="app"><aside class="side" id="sd"><div class="logo">📚 SmartLib</div>${NAV[me.role].map(n=>`<button class="nav ${n[0]==view?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join('')}</aside>
+<div class="main"><div class="top"><button class="btn s menu" onclick="$('#sd').classList.toggle('open')">☰</button><b style="text-transform:capitalize">${me.role} dashboard</b><span class="sp"></span><span class="tag t-in">${me.name}</span><button class="btn s sm" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme=='dark'?'light':'dark'">◐</button><button class="btn s sm" onclick="logout()">Logout</button></div><div class="pg" id="pg"></div></div></div>`;
+$('#pg').innerHTML=V[view]();}
+function go(v){view=v;q='';cat='';render()}
+function modal(h){closeM();document.body.insertAdjacentHTML('beforeend',`<div class="mod" onclick="if(event.target==this)closeM()"><div class="card">${h}</div></div>`)}
+function closeM(){document.querySelector('.mod')?.remove()}
+const tbl=(h,r)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')||`<tr><td colspan=9 style="color:var(--mu)">Nothing here yet</td></tr>`}</table></div>`;
+const stat=(v,l,i)=>`<div class="card stat"><span>${i} ${l}</span><b>${v}</b></div>`;
+const bars=d=>{const m=Math.max(...d.map(x=>x[1]),1);return`<div class="bars">${d.map(x=>`<div>${x[1]}<i style="height:${x[1]/m*100}%"></i>${x[0]}</div>`).join('')}</div>`};
+
+/* ---------- STUDENT ---------- */
+function recs(){const mine=S.loans.filter(l=>l.uid==me.id),cs={};mine.forEach(l=>cs[book(l.bid).cat]=(cs[book(l.bid).cat]||0)+1);const had=new Set(mine.map(l=>l.bid));
+return S.books.filter(b=>!had.has(b.id)).sort((a,b)=>((cs[b.cat]||0)*2+b.rating)-((cs[a.cat]||0)*2+a.rating)).slice(0,5)}
+const card=b=>`<div class="bk" onclick="detail(${b.id})">${cover(b)}<h4>${b.title}</h4><p>${b.author}</p><p>${status(b)} <span style="color:#f59e0b">★</span>${b.rating.toFixed(1)}</p></div>`;
+const V={
+browse(){const f=S.books.filter(b=>(!cat||b.cat==cat)&&(b.title+b.author+b.cat+b.isbn).toLowerCase().includes(q.toLowerCase()));
+return`<h2>Browse books</h2><div class="row" style="margin:12px 0"><input placeholder="Search title, author, category or ISBN…" value="${q}" oninput="q=this.value;$('#bl').innerHTML=''+V.list()"><select style="max-width:220px" onchange="cat=this.value;$('#bl').innerHTML=V.list()"><option value="">All categories</option>${S.cats.map(c=>`<option ${c==cat?'selected':''}>${c}</option>`)}</select></div>
+${q||cat?'':`<h3 style="margin:8px 0 12px">✨ Recommended for you</h3><div class="books" style="margin-bottom:26px">${recs().map(card).join('')}</div><h3 style="margin-bottom:12px">All books</h3>`}<div class="books" id="bl">${V.list()}</div>`},
+list(){return S.books.filter(b=>(!cat||b.cat==cat)&&(b.title+b.author+b.cat+b.isbn).toLowerCase().includes(q.toLowerCase())).map(card).join('')||'<p>No books found.</p>'},
+loans(){const L=S.loans.filter(l=>l.uid==me.id).reverse(),tf=L.reduce((s,l)=>s+(l.ret?0:fine(l)),0);
+return`<h2>My loans</h2><div class="grid g4" style="margin:14px 0">${stat(L.filter(l=>!l.ret).length,'Active loans','📖')}${stat(L.filter(od).length,'Overdue','⏰')}${stat('₹'+tf,'Fines due','💰')}${stat(L.length,'Total borrowed','📚')}</div><div class="card">${tbl(['Book','Issued','Due','Status','Fine',''],L.map(l=>[book(l.bid).title,fd(l.out),fd(l.due),l.ret?'<span class="tag t-ok">Returned '+fd(l.ret)+'</span>':od(l)?'<span class="tag t-er">Overdue</span>':'<span class="tag t-in">Due in '+Math.ceil((l.due-now())/D)+'d</span>','₹'+fine(l),l.ret?'':`<button class="btn sm" onclick="doReturn(${l.id})">Return</button>`]))}</div>`},
+wish(){const w=S.wish.filter(x=>x.uid==me.id).map(x=>book(x.bid));return`<h2>Wishlist</h2><div class="books" style="margin-top:14px">${w.map(card).join('')||'<p>Your wishlist is empty.</p>'}</div>`},
+digital(){return`<h2>Digital library</h2><p style="color:var(--mu)">Authorised e-books available to read online.</p><div class="books" style="margin-top:14px">${S.books.filter(b=>b.digital).map(b=>`<div class="bk">${cover(b)}<h4>${b.title}</h4><button class="btn sm" style="margin-top:6px" onclick="readBook(${b.id})">Read PDF</button></div>`).join('')}</div>`},
+notes(){const my=S.notes.filter(n=>n.uid==me.id).map(n=>[fd(n.d),n.t]);S.loans.filter(l=>l.uid==me.id&&!l.ret).forEach(l=>{const d=Math.ceil((l.due-now())/D);if(d<0)my.unshift(['Today','⚠️ “'+book(l.bid).title+'” is overdue by '+(-d)+' day(s). Fine: ₹'+fine(l)]);else if(d<=3)my.unshift(['Today','⏳ “'+book(l.bid).title+'” is due in '+d+' day(s).'])});
+return`<h2>Notifications</h2><div class="card" style="margin-top:14px">${tbl(['Date','Message'],my)}</div>`}};
+function detail(id){const b=book(id),rv=S.rev.filter(r=>r.bid==id),w=S.wish.some(x=>x.uid==me.id&&x.bid==id),st=me.role=='student';
+modal(`<div class="det"><div>${cover(b)}<div id="qr" style="margin-top:10px;background:#fff;padding:8px;border-radius:10px;width:fit-content"></div></div><div><h2>${b.title}</h2><p style="color:var(--mu)">${b.author} · ${b.cat}<br>ISBN ${b.isbn}</p><p><span style="color:#f59e0b">${stars(b.rating)}</span> ${b.rating.toFixed(1)} (${rv.length} reviews)</p><p>${status(b)} ${b.avail}/${b.copies} copies in</p>
+${st?`<div class="row" style="margin:10px 0">${b.avail>0?`<button class="btn g" onclick="borrow(${id})">Borrow</button>`:`<button class="btn" onclick="reserve(${id})">Reserve</button>`}<button class="btn s" onclick="wishT(${id})">${w?'♥ Wishlisted':'♡ Wishlist'}</button>${b.digital?`<button class="btn s" onclick="readBook(${id})">Read PDF</button>`:''}</div>`:''}
+<small style="color:var(--mu)">QR code: LMS:${id} — scan at the issue desk.</small>
+<h4 style="margin:14px 0 6px">Reviews</h4>${rv.map(r=>`<p style="margin:4px 0"><span style="color:#f59e0b">${stars(r.r)}</span> ${user(r.uid)?.name||'User'}: ${r.t}</p>`).join('')||'<p>No reviews yet.</p>'}
+${st?`<div style="margin-top:8px"><select id="rr" style="width:90px">${[5,4,3,2,1].map(n=>`<option>${n}</option>`)}</select><input id="rt" placeholder="Write a review"><button class="btn sm" onclick="review(${id})">Submit review</button></div>`:''}
+<button class="btn s sm" style="margin-top:10px" onclick="closeM()">Close</button></div></div>`);
+try{new QRCode($('#qr'),{text:'LMS:'+id,width:96,height:96})}catch(e){}}
+function borrow(id,uid=me.id){const b=book(id),a=S.loans.filter(l=>l.uid==uid&&!l.ret).length;if(b.avail<1)return toast('No copies available');if(a>=S.set.max)return toast('Borrow limit reached ('+S.set.max+')');
+if(S.loans.some(l=>l.uid==uid&&l.bid==id&&!l.ret))return toast('Already borrowed');
+b.avail--;S.loans.push({id:S.lid++,uid,bid:id,out:now(),due:now()+S.set.days*D,ret:null});S.res.forEach(r=>{if(r.uid==uid&&r.bid==id)r.st='done'});notify(uid,'📖 “'+b.title+'” issued. Due '+fd(now()+S.set.days*D));save();toast('Issued! Due '+fd(now()+S.set.days*D));closeM();render()}
+function doReturn(lid){const l=S.loans.find(x=>x.id==lid),b=book(l.bid);l.ret=now();b.avail++;const f=fine(l);if(f)notify(l.uid,'💰 Fine of ₹'+f+' for “'+b.title+'”');const r=S.res.find(r=>r.bid==b.id&&r.st=='waiting');if(r){notify(r.uid,'📌 Reserved book “'+b.title+'” is now available!');r.st='ready'}save();toast('Returned'+(f?' · fine ₹'+f:''));render()}
+function reserve(id){if(S.res.some(r=>r.uid==me.id&&r.bid==id&&r.st!='done'))return toast('Already reserved');S.res.push({id:Date.now(),uid:me.id,bid:id,st:'waiting',d:now()});save();toast('Reserved — we will notify you');closeM();render()}
+function wishT(id){const i=S.wish.findIndex(x=>x.uid==me.id&&x.bid==id);i<0?S.wish.push({uid:me.id,bid:id}):S.wish.splice(i,1);save();detail(id)}
+function review(id){const t=$('#rt').value.trim();if(!t)return;S.rev.push({bid:id,uid:me.id,r:+$('#rr').value,t});const rv=S.rev.filter(r=>r.bid==id);book(id).rating=(book(id).rating*5+rv.at(-1).r)/6;save();detail(id)}
+function readBook(id){const b=book(id);modal(`<h2>${b.title}</h2><p style="color:var(--mu)">Digital edition · ${b.author}</p><div style="background:var(--bg);padding:20px;border-radius:12px;line-height:1.8"><b>Chapter 1</b><br>This is a sample reader view. In a production deployment the authorised PDF for this title would load here from the library server, with a download option for permitted users.</div><button class="btn s sm" style="margin-top:12px" onclick="closeM()">Close</button>`)}
+
+/* ---------- LIBRARIAN / ADMIN ---------- */
+const students=()=>S.users.filter(u=>u.role=='student');
+Object.assign(V,{
+lover(){const act=S.loans.filter(l=>!l.ret);return`<h2>Library overview</h2><div class="grid g4" style="margin:14px 0">${stat(S.books.length,'Titles','📚')}${stat(S.books.reduce((s,b)=>s+b.copies,0),'Total copies','🗂️')}${stat(S.books.reduce((s,b)=>s+b.avail,0),'Available','✅')}${stat(act.length,'Borrowed','📖')}${stat(act.filter(od).length,'Overdue','⏰')}</div><div class="card"><h3 style="margin-bottom:10px">Live availability</h3>${tbl(['Book','Status','In / Total'],S.books.map(b=>[b.title,status(b),b.avail+' / '+b.copies]))}</div>`},
+lbooks(){return`<div class="row"><h2 style="flex:1">Manage books</h2><button class="btn" onclick="bookForm()">+ Add book</button></div><div class="card" style="margin-top:14px">${tbl(['Title','Author','Category','ISBN','Copies','QR',''],S.books.map(b=>[b.title,b.author,b.cat,b.isbn,b.copies,'LMS:'+b.id,`<button class="btn s sm" onclick="detail(${b.id})">QR</button> <button class="btn s sm" onclick="bookForm(${b.id})">Edit</button> <button class="btn d sm" onclick="delBook(${b.id})">Delete</button>`]))}</div>`},
+cats(){return`<h2>Categories</h2><div class="card" style="margin-top:14px"><div class="row"><input id="nc" placeholder="New category"><button class="btn" onclick="addCat()">Add</button></div>${tbl(['Category','Books',''],S.cats.map(c=>[c,S.books.filter(b=>b.cat==c).length,`<button class="btn d sm" onclick="delCat('${c}')">Remove</button>`]))}</div>`},
+studs(){return`<div class="row"><h2 style="flex:1">Students</h2><button class="btn" onclick="userForm('student')">+ Register student</button></div><div class="card" style="margin-top:14px">${tbl(['Name','Email','Active loans','Fines'],students().map(u=>[u.name,u.email,S.loans.filter(l=>l.uid==u.id&&!l.ret).length,'₹'+S.loans.filter(l=>l.uid==u.id).reduce((s,l)=>s+fine(l),0)]))}</div>`},
+issue(){return`<h2>Issue / return</h2><div class="grid g2" style="margin-top:14px"><div class="card"><h3>📲 Scan & issue</h3><p style="color:var(--mu)">Scan a book QR (LMS:id) or type an ISBN. A USB/phone scanner types into this field.</p><label>Student</label><select id="is">${students().map(u=>`<option value="${u.id}">${u.name}</option>`)}</select><label>Book QR / ISBN</label><input id="ic" placeholder="LMS:1"><button class="btn g" onclick="scan('issue')">Issue book</button></div>
+<div class="card"><h3>↩️ Scan & return</h3><label>Book QR / ISBN</label><input id="rc" placeholder="LMS:1"><button class="btn" onclick="scan('ret')">Process return</button><div style="margin-top:14px">${tbl(['Book','Student','Due',''],S.loans.filter(l=>!l.ret).map(l=>[book(l.bid).title,user(l.uid)?.name,fd(l.due),`<button class="btn sm" onclick="doReturn(${l.id})">Return</button>`]))}</div></div></div>`},
+overdue(){const L=S.loans.filter(od);return`<h2>Overdue books</h2><p style="color:var(--mu)">Fines at ₹${S.set.rate}/day</p><div class="card" style="margin-top:14px">${tbl(['Book','Student','Due','Days late','Fine',''],L.map(l=>[book(l.bid).title,user(l.uid)?.name,fd(l.due),Math.floor((now()-l.due)/D),'₹'+fine(l),`<button class="btn sm" onclick="notify(${l.uid},'⚠️ Overdue: “${book(l.bid).title.replace(/'/g,'')}”. Fine ₹${fine(l)}');save();toast('Reminder sent')">Remind</button>`]))}</div>`},
+resv(){return`<h2>Reservations</h2><div class="card" style="margin-top:14px">${tbl(['Book','Student','Date','Status',''],S.res.filter(r=>r.st!='done').map(r=>[book(r.bid).title,user(r.uid)?.name,fd(r.d),r.st=='ready'?'<span class="tag t-ok">Ready</span>':'<span class="tag t-wn">Waiting</span>',`<button class="btn d sm" onclick="S.res=S.res.filter(x=>x.id!=${r.id});save();render()">Cancel</button>`]))}</div>`},
+reports(){const pop=S.books.map(b=>[b.title,S.loans.filter(l=>l.bid==b.id).length]).sort((a,b)=>b[1]-a[1]);const fines=S.loans.reduce((s,l)=>s+fine(l),0);return`<h2>Reports</h2><div class="grid g4" style="margin:14px 0">${stat(S.loans.length,'Total issues','📖')}${stat(S.loans.filter(od).length,'Overdue now','⏰')}${stat('₹'+fines,'Fines assessed','💰')}${stat(students().length,'Students','🎓')}</div><div class="grid g2"><div class="card"><h3 style="margin-bottom:8px">Most borrowed</h3>${tbl(['Book','Issues'],pop.slice(0,6))}</div><div class="card"><h3 style="margin-bottom:8px">Borrowing by category</h3>${S.cats.map(c=>{const n=S.loans.filter(l=>book(l.bid).cat==c).length;return`<div class="hb">${c} · ${n}<div><i style="width:${n/Math.max(S.loans.length,1)*100}%"></i></div></div>`}).join('')}</div></div><button class="btn s" style="margin-top:14px" onclick="window.print()">🖨 Print report</button>`},
+aover(){const mo=[],M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],d=new Date(),base=[38,45,52,48,60,71,66,74,81,77];for(let i=5;i>=0;i--){const x=new Date(d.getFullYear(),d.getMonth()-i,1),n=S.loans.filter(l=>{const o=new Date(l.out);return o.getMonth()==x.getMonth()&&o.getFullYear()==x.getFullYear()}).length;mo.push([M[x.getMonth()],n+base[(9-i)%10]])}
+const pop=S.books.map(b=>[b.title.slice(0,14),S.loans.filter(l=>l.bid==b.id).length]).sort((a,b)=>b[1]-a[1]).slice(0,6);const act=S.loans.filter(l=>!l.ret);
+return`<h2>Analytics dashboard</h2><div class="grid g4" style="margin:14px 0">${stat(S.books.length+' / '+S.books.reduce((s,b)=>s+b.copies,0),'Titles / copies','📚')}${stat(act.length,'Borrowed','📖')}${stat(S.books.reduce((s,b)=>s+b.avail,0),'Available','✅')}${stat(act.filter(od).length,'Overdue','⏰')}${stat(new Set(S.loans.map(l=>l.uid)).size,'Active users','👥')}</div><div class="grid g2"><div class="card"><h3>Monthly borrowing trend</h3>${bars(mo)}</div><div class="card"><h3>Popular books</h3>${bars(pop)}</div></div>
+<div class="card" style="margin-top:16px"><h3 style="margin-bottom:8px">Recent activity</h3>${tbl(['When','Activity'],S.loans.slice(-6).reverse().map(l=>[fd(l.ret||l.out),user(l.uid)?.name+(l.ret?' returned ':' borrowed ')+book(l.bid).title]))}</div>`},
+accts(){return`<div class="row"><h2 style="flex:1">Accounts & roles</h2><button class="btn" onclick="userForm('librarian')">+ Librarian</button><button class="btn s" onclick="userForm('student')">+ Student</button></div><div class="card" style="margin-top:14px">${tbl(['Name','Email','Role','Permissions',''],S.users.map(u=>[u.name,u.email,`<select style="width:130px;margin:0" ${u.id==me.id?'disabled':''} onchange="user(${u.id}).role=this.value;save();render()">${['student','librarian','admin'].map(r=>`<option ${r==u.role?'selected':''}>${r}</option>`)}</select>`,{student:'Borrow, review',librarian:'Books, issue, fines',admin:'Full access'}[u.role],u.id==me.id?'':`<button class="btn d sm" onclick="S.users=S.users.filter(x=>x.id!=${u.id});save();render()">Delete</button>`]))}</div>`},
+settings(){return`<h2>Fine & loan rules</h2><div class="card" style="margin-top:14px;max-width:420px"><label>Fine per overdue day (₹)</label><input id="s1" type="number" value="${S.set.rate}"><label>Loan period (days)</label><input id="s2" type="number" value="${S.set.days}"><label>Max books per student</label><input id="s3" type="number" value="${S.set.max}"><button class="btn" onclick="S.set={rate:+$('#s1').value,days:+$('#s2').value,max:+$('#s3').value};save();toast('Rules saved')">Save rules</button></div>`}});
+function scan(t){const c=(t=='issue'?$('#ic'):$('#rc')).value.trim(),b=S.books.find(b=>'LMS:'+b.id==c||b.isbn==c);if(!b)return toast('Book not found');
+if(t=='issue')return borrow(b.id,+$('#is').value);const l=S.loans.find(l=>l.bid==b.id&&!l.ret);l?doReturn(l.id):toast('No active loan for this book')}
+function bookForm(id){const b=id?book(id):{title:'',author:'',isbn:'',copies:1,cat:S.cats[0]};modal(`<h2>${id?'Edit':'Add'} book</h2><label>Title</label><input id="f1" value="${b.title}"><label>Author</label><input id="f2" value="${b.author}"><label>ISBN</label><input id="f3" value="${b.isbn}"><label>Category</label><select id="f4">${S.cats.map(c=>`<option ${c==b.cat?'selected':''}>${c}</option>`)}</select><label>Copies</label><input id="f5" type="number" min="1" value="${b.copies}"><div class="row"><button class="btn" onclick="saveBook(${id||0})">Save</button><button class="btn s" onclick="closeM()">Cancel</button></div>`)}
+function saveBook(id){const t=$('#f1').value.trim();if(!t)return toast('Title required');const c=Math.max(1,+$('#f5').value);if(id){const b=book(id);b.avail+=c-b.copies;Object.assign(b,{title:t,author:$('#f2').value,isbn:$('#f3').value,cat:$('#f4').value,copies:c})}else S.books.push({id:S.bid++,title:t,author:$('#f2').value,isbn:$('#f3').value,cat:$('#f4').value,copies:c,avail:c,rating:4,digital:0,col:COL[S.bid%8]});save();closeM();render()}
+function delBook(id){if(S.loans.some(l=>l.bid==id&&!l.ret))return toast('Book has active loans');S.books=S.books.filter(b=>b.id!=id);save();render()}
+function addCat(){const v=$('#nc').value.trim();if(v&&!S.cats.includes(v)){S.cats.push(v);save();render()}}
+function delCat(c){if(S.books.some(b=>b.cat==c))return toast('Category in use');S.cats=S.cats.filter(x=>x!=c);save();render()}
+function userForm(role){modal(`<h2>Add ${role}</h2><label>Name</label><input id="u1"><label>Email</label><input id="u2"><label>Password</label><input id="u3" value="pass1234"><div class="row"><button class="btn" onclick="S.users.push({id:Date.now(),name:$('#u1').value,email:$('#u2').value,pw:$('#u3').value,role:'${role}'});save();closeM();render()">Create</button><button class="btn s" onclick="closeM()">Cancel</button></div>`)}
+load();authView();
+</script></body></html>
